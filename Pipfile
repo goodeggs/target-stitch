@@ -1,0 +1,13 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+
+[dev-packages]
+target-stitch = {path = ".", editable = true}
+
+[requires]
+
+[pipenv]

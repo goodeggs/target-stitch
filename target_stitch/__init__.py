@@ -26,6 +26,7 @@ from decimal import Decimal, getcontext
 import asyncio
 import concurrent
 from pprint import pformat
+import rollbar
 import simplejson
 import psutil
 
@@ -41,6 +42,12 @@ import ciso8601
 
 
 LOGGER = singer.get_logger().getChild('target_stitch')
+
+# Setup Rollbar.
+ROLLBAR_ACCESS_TOKEN = os.environ["ROLLBAR_ACCESS_TOKEN"]
+ROLLBAR_ENVIRONMENT = os.environ["ROLLBAR_ENVIRONMENT"]
+
+rollbar.init(ROLLBAR_ACCESS_TOKEN, ROLLBAR_ENVIRONMENT)
 
 # We use this to store schema and key properties from SCHEMA messages
 StreamMeta = namedtuple('StreamMeta', ['schema', 'key_properties', 'bookmark_properties'])
@@ -844,9 +851,11 @@ def main():
     except TargetStitchException as exc:
         for line in str(exc).splitlines():
             LOGGER.critical(line)
+        rollbar.report_exc_info()
         sys.exit(1)
     except Exception as exc:
         LOGGER.critical(exc)
+        rollbar.report_exc_info()
         raise exc
 
 if __name__ == '__main__':
