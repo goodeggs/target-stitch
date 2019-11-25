@@ -19,6 +19,7 @@ setup(name='target-stitch',
           'aiohttp==3.5.4',
           'cchardet==2.1.4',
           'aiodns==2.0.0',
+          'rollbar==0.14.7',
 	  'ciso8601',
       ],
       extras_require={
